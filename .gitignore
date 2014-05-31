@@ -1,0 +1,17 @@
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/.project
+/.settings
+/.classpath
+/target
+/conf.xml
+/userpreferences.dat
+/log
+/extensions
+/examples
+/temp
+/datastores
