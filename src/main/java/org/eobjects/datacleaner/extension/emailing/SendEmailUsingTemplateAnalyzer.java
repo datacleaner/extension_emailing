@@ -1,7 +1,10 @@
 package org.eobjects.datacleaner.extension.emailing;
 
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.eobjects.analyzer.beans.api.Analyzer;
 import org.eobjects.analyzer.beans.api.AnalyzerBean;
@@ -18,6 +21,8 @@ import org.eobjects.analyzer.data.InputRow;
 import org.eobjects.metamodel.util.FileHelper;
 import org.eobjects.metamodel.util.Func;
 import org.eobjects.metamodel.util.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
@@ -26,6 +31,8 @@ import com.google.common.base.Strings;
 @Categorized(EmailingCategory.class)
 @Concurrent(true)
 public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyzerResult> {
+
+    private static final Logger logger = LoggerFactory.getLogger(SendEmailUsingTemplateAnalyzer.class);
 
     private static final String PROPERTY_TEMPLATE_VALUE_COLUMNS = "Template value columns";
     private static final String PROPERTY_TEMPLATE_VALUE_KEYS = "Template values";
@@ -36,7 +43,7 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
     @Configured(value = "From (email address)", order = 110)
     String from = "Your name <your@email.com>";
 
-    @Configured(value="Email subject", order = 111)
+    @Configured(value = "Email subject", order = 111)
     String subject;
 
     @Configured(value = "SMTP host", order = 501)
@@ -71,12 +78,16 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
     @MappedProperty(PROPERTY_TEMPLATE_VALUE_COLUMNS)
     @Description("Key and values that will be used for search/replace while processing the templates and subject")
     String[] templateKeys;
-    
+
     @Configured
     String templateEncoding = "UTF-8";
 
-    private String htmlTemplateString;
-    private String plainTextTemplateString;
+    private String _htmlTemplateString;
+    private String _plainTextTemplateString;
+    private EmailDispatcher _emailDispatcher;
+    private AtomicInteger _successCount;
+    private AtomicInteger _skipCount;
+    private Collection<EmailResult> _failures;
 
     @Validate
     public void validate() {
@@ -87,8 +98,12 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
 
     @Initialize
     public void init() {
-        htmlTemplateString = loadTemplate(htmlTemplate);
-        plainTextTemplateString = loadTemplate(plainTextTemplate);
+        _htmlTemplateString = loadTemplate(htmlTemplate);
+        _plainTextTemplateString = loadTemplate(plainTextTemplate);
+        _emailDispatcher = new EmailDispatcher(smtpHost, smtpPort, smtpUsername, smtpPassword, from, tls, ssl);
+        _successCount = new AtomicInteger();
+        _skipCount = new AtomicInteger();
+        _failures = new ConcurrentLinkedQueue<EmailResult>();
     }
 
     private String loadTemplate(Resource res) {
@@ -105,19 +120,29 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
 
     @Override
     public void run(InputRow row, int distinctCount) {
-        String emailAddressValue = row.getValue(emailAddressColumn);
+        final String emailAddressValue = row.getValue(emailAddressColumn);
 
-        List<Object> values = row.getValues(templateValues);
+        if (Strings.isNullOrEmpty(emailAddressValue) || emailAddressValue.indexOf('@') == -1) {
+            logger.info("Skipping invalid email: {}", emailAddressValue);
+            _skipCount.incrementAndGet();
+            return;
+        }
 
-        String plainTextBody = buildBodyFromTemplate(plainTextTemplateString, templateKeys, values);
-        String htmlBody = buildBodyFromTemplate(htmlTemplateString, templateKeys, values);
+        final List<Object> values = row.getValues(templateValues);
 
-        EmailDispatcher dispatcher = new EmailDispatcher(smtpHost, smtpPort, smtpUsername, smtpPassword, from, tls, ssl);
-        
+        final String plainTextBody = buildBodyFromTemplate(_plainTextTemplateString, templateKeys, values);
+        final String htmlBody = buildBodyFromTemplate(_htmlTemplateString, templateKeys, values);
+
         // also apply template keys to subject
-        String preparedSubject = buildBodyFromTemplate(subject, templateKeys, values);
+        final String preparedSubject = buildBodyFromTemplate(subject, templateKeys, values);
 
-        dispatcher.sendMail(emailAddressValue, preparedSubject, templateEncoding, plainTextBody, htmlBody);
+        final EmailResult result = _emailDispatcher.sendMail(emailAddressValue, preparedSubject, templateEncoding,
+                plainTextBody, htmlBody);
+        if (result.isSuccessful()) {
+            _successCount.incrementAndGet();
+        } else {
+            _failures.add(result);
+        }
     }
 
     private String buildBodyFromTemplate(String template, String[] keys, List<Object> values) {
@@ -134,7 +159,7 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
 
     @Override
     public SendEmailAnalyzerResult getResult() {
-        return new SendEmailAnalyzerResult();
+        return new SendEmailAnalyzerResult(_successCount.get(), _skipCount.get(), _failures);
     }
 
     /**

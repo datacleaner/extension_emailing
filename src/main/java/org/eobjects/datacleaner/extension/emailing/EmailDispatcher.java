@@ -68,7 +68,8 @@ public class EmailDispatcher {
         }
     }
 
-    public void sendMail(final String to, final String subject, final String charset, final String bodyPlain, final String bodyHtml) {
+    public EmailResult sendMail(final String to, final String subject, final String charset, final String bodyPlain,
+            final String bodyHtml) {
         try {
             final Session session;
             if (_username != null && _password != null) {
@@ -98,11 +99,9 @@ public class EmailDispatcher {
             }
 
             Transport.send(message);
+            return EmailResult.success();
         } catch (Exception e) {
-            if (e instanceof RuntimeException) {
-                throw (RuntimeException) e;
-            }
-            throw new IllegalStateException("Failed to send email", e);
+            return EmailResult.failure(to, e);
         }
     }
 }
