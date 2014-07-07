@@ -65,6 +65,10 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
     @StringProperty(password = true)
     String smtpPassword;
 
+    @Configured(order = 520)
+    @Description("Sleep/wait time in milliseconds between every sent email. Negative value will allow concurrent sending, 0 will mean sequential sending with no delay.")
+    long sleepTimeInMillis = -1;
+
     @Configured(value = "HTML email template", required = false)
     Resource htmlTemplate;
 
@@ -137,7 +141,7 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
         final String preparedSubject = buildBodyFromTemplate(subject, templateKeys, values);
 
         final EmailResult result = _emailDispatcher.sendMail(emailAddressValue, preparedSubject, templateEncoding,
-                plainTextBody, htmlBody);
+                plainTextBody, htmlBody, sleepTimeInMillis);
         if (result.isSuccessful()) {
             _successCount.incrementAndGet();
         } else {

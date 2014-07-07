@@ -74,7 +74,27 @@ public class EmailDispatcher {
     }
 
     public EmailResult sendMail(final String to, final String subject, final String charset, final String bodyPlain,
-            final String bodyHtml) {
+            final String bodyHtml, long sleepTimeMillis) {
+        if (sleepTimeMillis < 0) {
+            // concurrent sending
+            return sendEmailInternal(to, subject, charset, bodyPlain, bodyHtml);
+        } else {
+            // sequential sending
+            synchronized (this) {
+                if (sleepTimeMillis > 0) {
+                    try {
+                        Thread.sleep(sleepTimeMillis);
+                    } catch (InterruptedException e) {
+                        // do nothing
+                        logger.debug("Sleeping was interrupted", e);
+                    }
+                }
+                return sendEmailInternal(to, subject, charset, bodyPlain, bodyHtml);
+            }
+        }
+    }
+
+    private EmailResult sendEmailInternal(String to, String subject, String charset, String bodyPlain, String bodyHtml) {
         try {
             final Session session;
             if (_username != null && _password != null) {

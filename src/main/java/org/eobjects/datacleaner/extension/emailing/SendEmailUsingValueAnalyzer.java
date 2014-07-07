@@ -59,6 +59,10 @@ public class SendEmailUsingValueAnalyzer implements Analyzer<SendEmailAnalyzerRe
     @StringProperty(password = true)
     String smtpPassword;
 
+    @Configured(order = 520)
+    @Description("Sleep/wait time in milliseconds between every sent email. Negative value will allow concurrent sending, 0 will mean sequential sending with no delay.")
+    long sleepTimeInMillis = -1;
+
     private EmailDispatcher _emailDispatcher;
     private AtomicInteger _successCount;
     private AtomicInteger _skipCount;
@@ -85,7 +89,7 @@ public class SendEmailUsingValueAnalyzer implements Analyzer<SendEmailAnalyzerRe
         }
 
         final EmailResult result = _emailDispatcher.sendMail(emailAddressValue, subjectString, "UTF-8", bodyString,
-                null);
+                null, sleepTimeInMillis);
         if (result.isSuccessful()) {
             _successCount.incrementAndGet();
         } else {
