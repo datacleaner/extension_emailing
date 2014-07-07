@@ -10,10 +10,15 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Class responsible for sending emails
  */
 public class EmailDispatcher {
+
+    private static final Logger logger = LoggerFactory.getLogger(EmailDispatcher.class);
 
     private final String _from;
     private final String _username;
@@ -101,6 +106,13 @@ public class EmailDispatcher {
             Transport.send(message);
             return EmailResult.success();
         } catch (Exception e) {
+            if (logger.isDebugEnabled()) {
+                final String body = (bodyHtml == null ? bodyPlain : bodyHtml);
+                logger.warn("Failed to send '" + subject + "' to " + to + ": " + body, e);
+            } else {
+                logger.warn("Failed to send '" + subject + "' to " + to, e);
+            }
+
             return EmailResult.failure(to, e);
         }
     }
