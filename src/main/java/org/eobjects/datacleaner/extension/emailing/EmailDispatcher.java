@@ -124,6 +124,9 @@ public class EmailDispatcher {
             }
 
             Transport.send(message);
+            
+            logger.info("Succesfully sent '{}' to {}", subject, to);
+            
             return EmailResult.success();
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {

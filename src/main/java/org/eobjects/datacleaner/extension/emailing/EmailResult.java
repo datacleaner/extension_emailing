@@ -1,6 +1,10 @@
 package org.eobjects.datacleaner.extension.emailing;
 
-public class EmailResult {
+import java.io.Serializable;
+
+public class EmailResult implements Serializable {
+    
+    private static final long serialVersionUID = 1L;
     
     private static final EmailResult SUCCESS = new EmailResult(true, null, null);
     
