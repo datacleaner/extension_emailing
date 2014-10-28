@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.eobjects.datacleaner</groupId>
 		<artifactId>DataCleaner-extensions</artifactId>
-		<version>3.6</version>
+		<version>3.7</version>
 	</parent>
 	<properties>
 	</properties>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>org.eobjects.datacleaner</groupId>
 			<artifactId>DataCleaner-desktop</artifactId>
-			<version>3.6</version>
+			<version>3.7</version>
 			<scope>provided</scope>
 		</dependency>
 

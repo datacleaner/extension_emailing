@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.apache.metamodel.util.FileHelper;
+import org.apache.metamodel.util.Func;
+import org.apache.metamodel.util.Resource;
 import org.eobjects.analyzer.beans.api.Analyzer;
 import org.eobjects.analyzer.beans.api.AnalyzerBean;
 import org.eobjects.analyzer.beans.api.Categorized;
@@ -18,9 +21,6 @@ import org.eobjects.analyzer.beans.api.StringProperty;
 import org.eobjects.analyzer.beans.api.Validate;
 import org.eobjects.analyzer.data.InputColumn;
 import org.eobjects.analyzer.data.InputRow;
-import org.eobjects.metamodel.util.FileHelper;
-import org.eobjects.metamodel.util.Func;
-import org.eobjects.metamodel.util.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

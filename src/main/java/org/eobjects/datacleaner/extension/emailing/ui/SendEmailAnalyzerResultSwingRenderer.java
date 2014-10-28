@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
+import org.apache.metamodel.util.FileHelper;
 import org.eobjects.analyzer.beans.api.RendererBean;
 import org.eobjects.analyzer.result.renderer.AbstractRenderer;
 import org.eobjects.analyzer.result.renderer.SwingRenderingFormat;
@@ -26,7 +27,6 @@ import org.eobjects.datacleaner.util.ImageManager;
 import org.eobjects.datacleaner.util.WidgetUtils;
 import org.eobjects.datacleaner.widgets.Alignment;
 import org.eobjects.datacleaner.widgets.DCFileChooser;
-import org.eobjects.metamodel.util.FileHelper;
 import org.jdesktop.swingx.VerticalLayout;
 
 @RendererBean(SwingRenderingFormat.class)
@@ -48,8 +48,7 @@ public class SendEmailAnalyzerResultSwingRenderer extends AbstractRenderer<SendE
         final Collection<EmailResult> failures = analyzerResult.getFailures();
 
         if (!failures.isEmpty()) {
-            final Icon icon = ImageManager.getInstance().getImageIcon(IconUtils.CSV_IMAGEPATH,
-                    IconUtils.ICON_SIZE_MEDIUM);
+            final Icon icon = ImageManager.get().getImageIcon(IconUtils.CSV_IMAGEPATH, IconUtils.ICON_SIZE_MEDIUM);
             final JButton exportButton = new JButton("Export failure recipients", icon);
             exportButton.addActionListener(new ActionListener() {
                 @Override
