@@ -9,7 +9,7 @@
 	</properties>
 	<groupId>org.eobjects.datacleaner.extensions</groupId>
 	<artifactId>DataCleaner-emailing</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 	<name>DataCleaner - 'emailing' extension</name>
 
@@ -17,7 +17,7 @@
 		<url>https://github.com/datacleaner/extension_emailing</url>
 		<connection>scm:git:https://github.com/datacleaner/extension_emailing.git</connection>
 		<developerConnection>scm:git:https://github.com/datacleaner/extension_emailing.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>DataCleaner-emailing-1.2</tag>
   </scm>
 
 	<build>
