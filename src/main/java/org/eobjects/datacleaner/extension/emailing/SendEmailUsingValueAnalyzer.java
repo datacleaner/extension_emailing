@@ -4,12 +4,17 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
 import org.eobjects.analyzer.beans.api.Analyzer;
 import org.eobjects.analyzer.beans.api.AnalyzerBean;
 import org.eobjects.analyzer.beans.api.Categorized;
+import org.eobjects.analyzer.beans.api.ComponentContext;
 import org.eobjects.analyzer.beans.api.Configured;
 import org.eobjects.analyzer.beans.api.Description;
+import org.eobjects.analyzer.beans.api.ExecutionLogMessage;
 import org.eobjects.analyzer.beans.api.Initialize;
+import org.eobjects.analyzer.beans.api.Provided;
 import org.eobjects.analyzer.beans.api.StringProperty;
 import org.eobjects.analyzer.data.InputColumn;
 import org.eobjects.analyzer.data.InputRow;
@@ -63,6 +68,10 @@ public class SendEmailUsingValueAnalyzer implements Analyzer<SendEmailAnalyzerRe
     @Description("Sleep/wait time in milliseconds between every sent email. Negative value will allow concurrent sending, 0 will mean sequential sending with no delay.")
     long sleepTimeInMillis = -1;
 
+    @Inject
+    @Provided
+    ComponentContext _componentContext;
+
     private EmailDispatcher _emailDispatcher;
     private AtomicInteger _successCount;
     private AtomicInteger _skipCount;
@@ -94,6 +103,11 @@ public class SendEmailUsingValueAnalyzer implements Analyzer<SendEmailAnalyzerRe
             _successCount.incrementAndGet();
         } else {
             _failures.add(result);
+            
+            // report to the execution log
+            final Exception error = result.getError();
+            _componentContext.publishMessage(new ExecutionLogMessage("Sending of email to '" + result.getRecipient()
+                    + " failed! " + (error == null ? "" : error.getMessage())));
         }
     }
 

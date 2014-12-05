@@ -6,17 +6,22 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import javax.inject.Inject;
+
 import org.apache.metamodel.util.FileHelper;
 import org.apache.metamodel.util.Func;
 import org.apache.metamodel.util.Resource;
 import org.eobjects.analyzer.beans.api.Analyzer;
 import org.eobjects.analyzer.beans.api.AnalyzerBean;
 import org.eobjects.analyzer.beans.api.Categorized;
+import org.eobjects.analyzer.beans.api.ComponentContext;
 import org.eobjects.analyzer.beans.api.Concurrent;
 import org.eobjects.analyzer.beans.api.Configured;
 import org.eobjects.analyzer.beans.api.Description;
+import org.eobjects.analyzer.beans.api.ExecutionLogMessage;
 import org.eobjects.analyzer.beans.api.Initialize;
 import org.eobjects.analyzer.beans.api.MappedProperty;
+import org.eobjects.analyzer.beans.api.Provided;
 import org.eobjects.analyzer.beans.api.StringProperty;
 import org.eobjects.analyzer.beans.api.Validate;
 import org.eobjects.analyzer.data.InputColumn;
@@ -85,6 +90,10 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
 
     @Configured
     String templateEncoding = "UTF-8";
+    
+    @Inject
+    @Provided
+    ComponentContext _componentContext;
 
     private String _htmlTemplateString;
     private String _plainTextTemplateString;
@@ -146,6 +155,11 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
             _successCount.incrementAndGet();
         } else {
             _failures.add(result);
+            
+            // report to the execution log
+            final Exception error = result.getError();
+            _componentContext.publishMessage(new ExecutionLogMessage("Sending of email to '" + result.getRecipient()
+                    + " failed! " + (error == null ? "" : error.getMessage())));
         }
     }
 
