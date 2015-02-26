@@ -3,9 +3,9 @@ package org.eobjects.datacleaner.extension.emailing;
 import java.util.Collection;
 import java.util.Collections;
 
-import org.eobjects.analyzer.beans.api.Analyzer;
-import org.eobjects.analyzer.result.AnalyzerResult;
-import org.eobjects.analyzer.result.Metric;
+import org.datacleaner.api.Analyzer;
+import org.datacleaner.api.AnalyzerResult;
+import org.datacleaner.api.Metric;
 
 /**
  * Result class for {@link Analyzer}s that sends emails
@@ -23,7 +23,7 @@ public class SendEmailAnalyzerResult implements AnalyzerResult {
         _skipCount = skipCount;
         _failures = failures;
     }
-    
+
     public Collection<EmailResult> getFailures() {
         return Collections.unmodifiableCollection(_failures);
     }

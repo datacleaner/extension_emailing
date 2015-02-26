@@ -6,6 +6,6 @@ package org.eobjects.datacleaner.extension.emailing;
 public class TestMain {
 
     public static void main(String[] args) {
-        org.eobjects.datacleaner.Main.main(args);
+        org.datacleaner.Main.main(args);
     }
 }

@@ -5,27 +5,27 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
-import org.eobjects.analyzer.beans.api.Analyzer;
-import org.eobjects.analyzer.beans.api.AnalyzerBean;
-import org.eobjects.analyzer.beans.api.Categorized;
-import org.eobjects.analyzer.beans.api.ComponentContext;
-import org.eobjects.analyzer.beans.api.Configured;
-import org.eobjects.analyzer.beans.api.Description;
-import org.eobjects.analyzer.beans.api.ExecutionLogMessage;
-import org.eobjects.analyzer.beans.api.Initialize;
-import org.eobjects.analyzer.beans.api.Provided;
-import org.eobjects.analyzer.beans.api.StringProperty;
-import org.eobjects.analyzer.data.InputColumn;
-import org.eobjects.analyzer.data.InputRow;
+import org.datacleaner.api.Analyzer;
+import org.datacleaner.api.Categorized;
+import org.datacleaner.api.ComponentContext;
+import org.datacleaner.api.Configured;
+import org.datacleaner.api.Description;
+import org.datacleaner.api.ExecutionLogMessage;
+import org.datacleaner.api.Initialize;
+import org.datacleaner.api.InputColumn;
+import org.datacleaner.api.InputRow;
+import org.datacleaner.api.Provided;
+import org.datacleaner.api.StringProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-@AnalyzerBean("Send email (using record values)")
+@Named("Send email (using record values)")
 @Description("Sends emails using the record values as the email contents.")
-@Categorized(EmailingCategory.class)
+@Categorized(value=EmailingCategory.class)
 public class SendEmailUsingValueAnalyzer implements Analyzer<SendEmailAnalyzerResult> {
 
     private static final Logger logger = LoggerFactory.getLogger(SendEmailUsingValueAnalyzer.class);

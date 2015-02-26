@@ -7,31 +7,31 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.metamodel.util.FileHelper;
 import org.apache.metamodel.util.Func;
 import org.apache.metamodel.util.Resource;
-import org.eobjects.analyzer.beans.api.Analyzer;
-import org.eobjects.analyzer.beans.api.AnalyzerBean;
-import org.eobjects.analyzer.beans.api.Categorized;
-import org.eobjects.analyzer.beans.api.ComponentContext;
-import org.eobjects.analyzer.beans.api.Concurrent;
-import org.eobjects.analyzer.beans.api.Configured;
-import org.eobjects.analyzer.beans.api.Description;
-import org.eobjects.analyzer.beans.api.ExecutionLogMessage;
-import org.eobjects.analyzer.beans.api.Initialize;
-import org.eobjects.analyzer.beans.api.MappedProperty;
-import org.eobjects.analyzer.beans.api.Provided;
-import org.eobjects.analyzer.beans.api.StringProperty;
-import org.eobjects.analyzer.beans.api.Validate;
-import org.eobjects.analyzer.data.InputColumn;
-import org.eobjects.analyzer.data.InputRow;
+import org.datacleaner.api.Analyzer;
+import org.datacleaner.api.Categorized;
+import org.datacleaner.api.ComponentContext;
+import org.datacleaner.api.Concurrent;
+import org.datacleaner.api.Configured;
+import org.datacleaner.api.Description;
+import org.datacleaner.api.ExecutionLogMessage;
+import org.datacleaner.api.Initialize;
+import org.datacleaner.api.InputColumn;
+import org.datacleaner.api.InputRow;
+import org.datacleaner.api.MappedProperty;
+import org.datacleaner.api.Provided;
+import org.datacleaner.api.StringProperty;
+import org.datacleaner.api.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Strings;
 
-@AnalyzerBean("Send email (using template)")
+@Named("Send email (using template)")
 @Description("Sends emails using a template file in which values can be dynamically merged into the message.")
 @Categorized(EmailingCategory.class)
 @Concurrent(true)
@@ -90,7 +90,7 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
 
     @Configured
     String templateEncoding = "UTF-8";
-    
+
     @Inject
     @Provided
     ComponentContext _componentContext;
@@ -155,7 +155,7 @@ public class SendEmailUsingTemplateAnalyzer implements Analyzer<SendEmailAnalyze
             _successCount.incrementAndGet();
         } else {
             _failures.add(result);
-            
+
             // report to the execution log
             final Exception error = result.getError();
             _componentContext.publishMessage(new ExecutionLogMessage("Sending of email to '" + result.getRecipient()

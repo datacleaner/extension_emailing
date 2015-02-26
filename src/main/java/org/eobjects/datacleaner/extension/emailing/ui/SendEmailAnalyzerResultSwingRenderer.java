@@ -15,18 +15,18 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 
 import org.apache.metamodel.util.FileHelper;
-import org.eobjects.analyzer.beans.api.RendererBean;
-import org.eobjects.analyzer.result.renderer.AbstractRenderer;
-import org.eobjects.analyzer.result.renderer.SwingRenderingFormat;
+import org.datacleaner.api.RendererBean;
+import org.datacleaner.panels.DCPanel;
+import org.datacleaner.result.renderer.AbstractRenderer;
+import org.datacleaner.result.renderer.SwingRenderingFormat;
+import org.datacleaner.util.FileFilters;
+import org.datacleaner.util.IconUtils;
+import org.datacleaner.util.ImageManager;
+import org.datacleaner.util.WidgetUtils;
+import org.datacleaner.widgets.Alignment;
+import org.datacleaner.widgets.DCFileChooser;
 import org.eobjects.datacleaner.extension.emailing.EmailResult;
 import org.eobjects.datacleaner.extension.emailing.SendEmailAnalyzerResult;
-import org.eobjects.datacleaner.panels.DCPanel;
-import org.eobjects.datacleaner.util.FileFilters;
-import org.eobjects.datacleaner.util.IconUtils;
-import org.eobjects.datacleaner.util.ImageManager;
-import org.eobjects.datacleaner.util.WidgetUtils;
-import org.eobjects.datacleaner.widgets.Alignment;
-import org.eobjects.datacleaner.widgets.DCFileChooser;
 import org.jdesktop.swingx.VerticalLayout;
 
 @RendererBean(SwingRenderingFormat.class)
@@ -97,7 +97,7 @@ public class SendEmailAnalyzerResultSwingRenderer extends AbstractRenderer<SendE
         final JLabel recipientLabel = new JLabel(failureEmailResult.getRecipient());
         recipientLabel.setFont(WidgetUtils.FONT_NORMAL.deriveFont(Font.BOLD));
 
-        DCPanel panel = new DCPanel(WidgetUtils.BG_COLOR_BRIGHTEST, WidgetUtils.BG_COLOR_BRIGHTEST);
+        DCPanel panel = new DCPanel(WidgetUtils.BG_COLOR_BRIGHTEST);
         panel.setLayout(new FlowLayout(Alignment.LEFT.getFlowLayoutAlignment()));
         panel.add(new JLabel("Failed to send email to: "));
         panel.add(recipientLabel);
@@ -115,7 +115,7 @@ public class SendEmailAnalyzerResultSwingRenderer extends AbstractRenderer<SendE
         final JLabel valueLabel = new JLabel("" + value);
         valueLabel.setFont(WidgetUtils.FONT_NORMAL.deriveFont(Font.BOLD));
 
-        DCPanel panel = new DCPanel(WidgetUtils.BG_COLOR_BRIGHTEST, WidgetUtils.BG_COLOR_BRIGHTEST);
+        DCPanel panel = new DCPanel(WidgetUtils.BG_COLOR_BRIGHTEST);
         panel.setLayout(new FlowLayout(Alignment.LEFT.getFlowLayoutAlignment()));
         panel.add(new JLabel(metric));
         panel.add(valueLabel);

@@ -1,6 +1,6 @@
 package org.eobjects.datacleaner.extension.emailing;
 
-import org.eobjects.analyzer.beans.categories.AbstractComponentCategory;
+import org.datacleaner.components.categories.AbstractComponentCategory;
 
 public class EmailingCategory extends AbstractComponentCategory {
 
