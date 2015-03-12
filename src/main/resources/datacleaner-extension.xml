@@ -2,6 +2,6 @@
 <extension xmlns="http://eobjects.org/datacleaner/extension/1.0">
 	<name>Emailing extension</name>
 	<description>An emailing extension for DataCleaner - use it to send newsletters or other batch emails</description>
-	<package>org.eobjects.datacleaner.extension.emailing</package>
-	<icon>org/eobjects/datacleaner/extension/emailing/EmailingCategory.png</icon>
+	<package>org.datacleaner.extension.emailing</package>
+	<icon>org/datacleaner/extension/emailing/EmailingCategory.png</icon>
 </extension>

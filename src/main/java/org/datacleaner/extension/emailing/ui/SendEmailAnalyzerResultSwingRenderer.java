@@ -1,4 +1,4 @@
-package org.eobjects.datacleaner.extension.emailing.ui;
+package org.datacleaner.extension.emailing.ui;
 
 import java.awt.Component;
 import java.awt.FlowLayout;
@@ -16,6 +16,8 @@ import javax.swing.JLabel;
 
 import org.apache.metamodel.util.FileHelper;
 import org.datacleaner.api.RendererBean;
+import org.datacleaner.extension.emailing.EmailResult;
+import org.datacleaner.extension.emailing.SendEmailAnalyzerResult;
 import org.datacleaner.panels.DCPanel;
 import org.datacleaner.result.renderer.AbstractRenderer;
 import org.datacleaner.result.renderer.SwingRenderingFormat;
@@ -25,8 +27,6 @@ import org.datacleaner.util.ImageManager;
 import org.datacleaner.util.WidgetUtils;
 import org.datacleaner.widgets.Alignment;
 import org.datacleaner.widgets.DCFileChooser;
-import org.eobjects.datacleaner.extension.emailing.EmailResult;
-import org.eobjects.datacleaner.extension.emailing.SendEmailAnalyzerResult;
 import org.jdesktop.swingx.VerticalLayout;
 
 @RendererBean(SwingRenderingFormat.class)

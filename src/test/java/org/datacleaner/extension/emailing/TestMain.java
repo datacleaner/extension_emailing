@@ -1,4 +1,4 @@
-package org.eobjects.datacleaner.extension.emailing;
+package org.datacleaner.extension.emailing;
 
 /**
  * Convenient main class to call

@@ -1,4 +1,4 @@
-package org.eobjects.datacleaner.extension.emailing;
+package org.datacleaner.extension.emailing;
 
 import java.util.Properties;
 
